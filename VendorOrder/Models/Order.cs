@@ -6,11 +6,15 @@ namespace VendorOrder.Models
     {
         public string Description { get; set; }
         public int Id { get; }
+        public int Price {get;set;}
+        public string Day{get;set;}
         private static List<Order> _instances = new List<Order> { };
 
-        public Order(string description)
+        public Order(string description, int price, string day)
         {
             Description = description;
+            Price = price;
+            Day = day;
             _instances.Add(this);
             Id = _instances.Count;
         }

@@ -1,51 +1,37 @@
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using VendorOrder.Models;
 using System.Collections.Generic;
 
-namespace ToDoList.Controllers
+namespace VendorOrder.Controllers
 {
-    public class ItemsController : Controller
+    public class OrdersController : Controller
     {
 
-        [HttpGet("/items")]
-        //Route name-- the route is index(), per restful requirements
-
-        //url path -- we specify the path /items in our route decorator
-
-        // http method-- the route decorator denotes that this route   will respond to GET requests by using the httpget method.
-       //purpose -- this route is meant to display a list of all items
-        public ActionResult Index()
+        [HttpGet("/vendors/{vendorId}/orders/new")]
+        public ActionResult New(int vendorId)
         {
-            List<Item> allItems = Item.GetAll();
-            return View(allItems);
+            Vendor vendor = Vendor.Find(vendorId);
+            return View(vendor);
         }
 
-        [HttpGet("/items/new")]
-        public ActionResult New()
+        [HttpGet("/vendors/{vendorId}/orders/{orderId}")]
+        public ActionResult Show(int vendorId, int orderId)
         {
-            return View();
+            Order order = Order.Find(orderId);
+            Vendor vendor = Vendor.Find(vendorId);
+            Dictionary<string, object> model = new Dictionary<string, object>();
+            model.Add("order", order);
+            model.Add("vendor", vendor);
+            return View(model);
         }
-
-        [HttpPost("/items")]
-        public ActionResult Create(string description)
-        {
-            Item myItem = new Item(description);
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost("/items/delete")]
+        
+        [HttpPost("/order/delete")]
         public ActionResult DeleteAll()
         {
-            Item.ClearAll();
+            Order.ClearAll();
             return View();
         }
 
-        [HttpGet("/items/{id}")]
-        public ActionResult Show(int CanBeANyTHINGfORiD)
-        {
-            Item foundItem = Item.Find(CanBeANyTHINGfORiD);
-            return View(foundItem);
-        }
 
     }
 }
